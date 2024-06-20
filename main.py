@@ -1,6 +1,5 @@
-import asyncio
 from typing import Final
-from telegram import Update,ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update,InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler, CallbackContext
 # from dotenv import load_dotenv
 # import os
@@ -118,15 +117,20 @@ async def useMenu(update:Update, context: CallbackContext):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(text='*Choose the Following Button Options:*',reply_markup=reply_markup,parse_mode='Markdown')
 
-def button_commands(update:Update, context: ContextTypes.DEFAULT_TYPE):
+def button_commands(update:Update, context: CallbackContext):
     """Handling all related button callbak query"""
 
     query = update.callback_query
     query.answer()
 
-    if query.data == 'marketcap':
-        print('hello world')
-        # query.edit_message_text(text='You picked the marketcap options')
+    if query.data == 'market':
+        query.edit_message_text(text="you pressed the marketcap command")
+
+    if query.data == 'analytical_report':
+        query.edit_message_text(text="You clicked on the analysis button")
+
+    if query.data == 'about_flamingo':
+        query.edit_message_text(text="You clicked info about flamingo")
 
 
 
@@ -148,12 +152,13 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('coinPrice', getCoinDetails_comand))
     app.add_handler(CommandHandler('marketcap', marketCap_command))
     app.add_handler(CommandHandler('options', useMenu))
+    app.add_handler(CallbackQueryHandler(button_commands))
 
 
     # print(dir(CallbackQueryHandler))
     # Adding callback queries
     # button = CallbackQueryHandler('marketcap',marketCap_command)
-    app.add_handler(CallbackQueryHandler('marketcap',button_commands(Update,CallbackContext)))
+    # app.add_handler(CallbackQueryHandler('marketcap',button_commands(Update,CallbackContext)))
 
     #  message handlers
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
@@ -164,3 +169,4 @@ if __name__ == '__main__':
     # Printing polling
     print('polling ....')
     app.run_polling(poll_interval=3)
+s
