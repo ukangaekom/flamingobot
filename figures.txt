@@ -1,0 +1,32 @@
+gas - 0.20413785
+bNeo - 0.31807357
+FLM - 34.49079837
+TIPS - 0.95736309
+
+Get Wallet Balance Function Creation Steps
+#Create a function to do the following
+1. Get the wallet balance and their token address.
+2. Get the token address and return their gas unit and prices 
+3. Match the wallet token fraction balance with the unit and multiply by the token price
+to get the token price.
+4. return the price of each tokens and their balances and quantity.
+5. Add the balance of each token and give the total balance of the wallet.
+
+Get total Transaction Count Function
+#Create a function to do the following
+1. fetch the data of the transaction api and and extract the total count from the json api
+
+
+Get Latest Transaction History Function
+#Create a function that does the following
+1. Get the total number of transactions in the first page 
+2. Shows the number of transaction pages available
+3. Returns the transaction history based on the page number the user specified
+
+Get lates coin price function
+#Create a function to get the latest price of a coin
+1. Let the function return the name of the coin and the latest price of the coin specified coin
+
+
+
+
