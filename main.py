@@ -1,13 +1,17 @@
 from typing import Final
-from telegram import Update,InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler, CallbackContext
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler, \
+    CallbackContext
 # from dotenv import load_dotenv
 # import os
 import cryptoapi
 
 # from cryptoapi import as neo
 
-
+coins = cryptoapi.getTotalCoins()
+# coinquantity = len(coins)
+print(coins)
+coin_list = [i for i in cryptoapi.hash_coin.values()]
 # loading .env file 
 # load_dotenv()
 # token = os.getenv("TOKEN")
@@ -16,6 +20,8 @@ import cryptoapi
 TOKEN: Final = "7139508330:AAF51Jl1VZCPxRy5T6lVcU__XWUTyDPEdHo"
 # BOT_USERNAME: Final = "@NeoCoachbot"
 BOT_USERNAME: Final = "@flmneo_bot"
+
+
 # bot = telebot.TeleBot("7139508330:AAF51Jl1VZCPxRy5T6lVcU__XWUTyDPEdHo")
 
 
@@ -25,12 +31,14 @@ BOT_USERNAME: Final = "@flmneo_bot"
 # using async await to create bot functions
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Hello Welcome to flamingo help desk. Reply /help'
-                                    'to know more about flamingo services')
+    await update.message.reply_text('Hello Welcome to flamingo help desk. Reply /help '
+                                    ' to know more about flamingo services')
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('🕵️:I am flamingohelp bot and I have the following commands documentaions')
+    await update.message.reply_text(
+        '🕵️: Hello, I am flamingo help bot. I have the following commands documentaions to improve your user experience over here!',
+        parse_mode='Markdown')
 
 
 async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -50,7 +58,7 @@ async def getWalletDetails_command(update: Update, context: ContextTypes.DEFAULT
         parse_mode='Markdown')
 
 
-async def getCoinDetails_comand(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def getCoinDetails_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     coin: str = update.message.text
     coin: str = coin.split()
     coin = coin[1].strip()
@@ -61,15 +69,14 @@ async def getCoinDetails_comand(update: Update, context: ContextTypes.DEFAULT_TY
 async def marketCap_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     flm_marketcap = cryptoapi.getFlamingoMarketCap()
     await update.message.reply_text(f'*Flamingo Market Cap* \n\n 📊*value*: *${flm_marketcap}*', parse_mode='Markdown')
+    return f'*Flamingo Market Cap* \n\n 📊*value*: *${flm_marketcap}*'
 
 
 async def getMarket_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # market = cryptoapi.getMarketData([cryptoapi.hash_coin[i] for i in cryptoapi.hash_coin])
-    market_report = ''
-    for i in market:
-        market_report += '{i} coin'
-
-    # await update.message.reply_text(f'{}')
+    data = cryptoapi.getMarketdata(coin_list)
+    await update.message.reply_text(f'*🔊Coins Latest🕛 Prices💰* \n\n {data}',
+                                    parse_mode='Markdown')
+    print(data)
 
 
 # More commands can be written below
@@ -108,33 +115,57 @@ async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {update} cause error {context.error}')
 
 
-
-async def useMenu(update:Update, context: CallbackContext):
-
-    keyboard = [[InlineKeyboardButton('MarketCap', callback_data='marketcap'),InlineKeyboardButton('Analysis', callback_data ='analysis_report')],
-                [InlineKeyboardButton('About', callback_data='about_flamingo')]]
+async def useMenu(update: Update, context: CallbackContext):
+    keyboard = [[InlineKeyboardButton('MarketCap', callback_data='marketcap'),
+                 InlineKeyboardButton('Analysis', callback_data='analysis_report')],
+                [InlineKeyboardButton('About', callback_data='about_flamingo'),
+                 InlineKeyboardButton('More', callback_data='user_guide')]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text(text='*Choose the Following Button Options:*',reply_markup=reply_markup,parse_mode='Markdown')
+    await update.message.reply_text(text='*Choose the Following Button Options:*', reply_markup=reply_markup,
+                                    parse_mode='Markdown')
 
-def button_commands(update:Update, context: CallbackContext):
+
+async def button_commands(update: Update, context: CallbackContext):
+    tokens = [InlineKeyboardButton(f'{i}', callback_data=f'{i}') for i in coins]
+    crypto_token_keyboards = cryptoapi.group(tokens)
+
+    questions = [InlineKeyboardButton(f'{i}', callback_data=f'{i}') for i in cryptoapi.question_answer]
+    user_guide_keyboards = cryptoapi.group(questions)
+
+    analysis = InlineKeyboardMarkup(crypto_token_keyboards)
+    user_guide = InlineKeyboardMarkup(user_guide_keyboards)
+
     """Handling all related button callbak query"""
-
     query = update.callback_query
-    query.answer()
+    await query.answer()
 
-    if query.data == 'market':
-        query.edit_message_text(text="you pressed the marketcap command")
+    if query.data == 'marketcap':
+        await query.edit_message_text(text="wow")
+        print(query)
+        print('Market cap button has been pressed')
 
-    if query.data == 'analytical_report':
-        query.edit_message_text(text="You clicked on the analysis button")
+    if query.data == 'analysis_report':
+        await query.edit_message_text(text="*Reports for coins on Flamingo Blockchain*",
+                                      reply_markup=analysis,
+                                      parse_mode='Markdown')
+        print("analysis_report button has been pressed")
 
     if query.data == 'about_flamingo':
-        query.edit_message_text(text="You clicked info about flamingo")
+        await query.edit_message_text(text="You clicked info about flamingo")
+        print("about flamingo button has been pressed")
 
+    if query.data == 'user_guide':
+        await query.edit_message_text(text="*🕵️‍♀️ Its time to be a Flamingo Wizard*",
+                                      reply_markup=user_guide,
+                                      parse_mode='Markdown')
+        print("flamingo user guide was pressed")
 
-
-
+    for i in cryptoapi.question_answer.keys():
+        if query.data == i:
+            await query.edit_message_text(text=f"*{i}* \n {cryptoapi.question_answer[i]} ",
+                                          parse_mode="Markdown")
+            break
 
 
 if __name__ == '__main__':
@@ -143,17 +174,16 @@ if __name__ == '__main__':
     # cryptoapi.calculateWalletBalance('NYAN6Nfd5rNWqJhqz6KxXBDJSv1DtMHU9G')
     app = Application.builder().token(TOKEN).build()
 
-
     # command handlers
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
     app.add_handler(CommandHandler('custom', custom_command))
     app.add_handler(CommandHandler('walletDetails', getWalletDetails_command))
-    app.add_handler(CommandHandler('coinPrice', getCoinDetails_comand))
+    app.add_handler(CommandHandler('marketDetails',getMarket_command))
+    app.add_handler(CommandHandler('coinPrice', getCoinDetails_command))
     app.add_handler(CommandHandler('marketcap', marketCap_command))
     app.add_handler(CommandHandler('options', useMenu))
     app.add_handler(CallbackQueryHandler(button_commands))
-
 
     # print(dir(CallbackQueryHandler))
     # Adding callback queries
@@ -169,4 +199,3 @@ if __name__ == '__main__':
     # Printing polling
     print('polling ....')
     app.run_polling(poll_interval=3)
-s

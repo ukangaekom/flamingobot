@@ -1,4 +1,23 @@
 import requests
+import request
+
+question_answer = {
+    "How to Set Up a Neo Wallet": f"{request.How_to_setup}",
+    "How to Buy FLM Token": f"{request.How_to_buy_FLM_Token}",
+    "How to Buy FLM Token on Binance": f"Will be Updated Soon",
+    "How to Stake and Earn Token": f"Will be Updated Soon",
+    "How to Swap Token": f"Will be Updated Soon",
+    "Flamingo Advanced Trade": f"Will be Updated Soon",
+    "Flamingo Lend": f"{request.Flamingo_Lend}",
+    "Flamingo FUSD Pool Bonus": f"Will be Updated Soon",
+    "Wrap & Unwrap": f"{request.wrap_Unwrap}",
+    "How to Stake FLP-FLM-fCAKE LP Token": f"Will be Updated Soon",
+    "How to Buy FLM Tokens on Gate.io": f"Will be Updated Soon",
+    "WETH assets migration": f"Will be Updated Soon",
+    "Flamincome": f"Will be Updated Soon",
+    "Asset Type Guide": f"Will be Updated Soon"
+
+}
 
 hash_coin = {'0xf0151f528127558851b39c2cd8aa47da7418ab28': 'FLM',
              '0xa9603a59e21d29e37ac39cf1b5f5abf5006b22a3': 'FLUND',
@@ -162,6 +181,14 @@ get_WalletHistoryLatest = 'https://neo-api.b-cdn.net/wallet/wallet/latest?neo_ad
 get_latestTransfer = 'https://neo-api.b-cdn.net/wallet/transfer/latest?neo_address=NYAN6Nfd5rNWqJhqz6KxXBDJSv1DtMHU9G'
 
 
+# question and answer functions
+
+def get_answer(question):
+    return question_answer[question]
+
+
+# api related functions
+
 def fetch_data(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -170,10 +197,21 @@ def fetch_data(url):
         return data
 
 
-
 def getMarketdata(list):
-    return
+    data = fetch_data('https://neo-api.b-cdn.net/flamingo/live-data/prices/latest')
+    # coin_decimal = tokenjson[coin]['decimals']
 
+    market_data = ''
+    for i in data:
+        for coin in list:
+            if i['unwrappedSymbol'] == coin:
+                symbol = coin
+                price = i['usd_price']
+                market_data += f'✅*{coin}*  :  💸*${round(price, 5)}* \n\n'
+
+    # print(coinPrice)
+    # print(market_data)
+    return market_data
 
 
 def getWalletDetails(address):
@@ -198,17 +236,37 @@ def info():
     return
 
 
+def getTotalCoins():
+    return [hash_coin[i] for i in hash_coin]
+
+
 def getPercentageRise(coin):
     return
 
 
+def group(list):
+    array = []
+    if len(list) % 3 != 0:
+
+        array += [[list[i], list[(i + 1)], list[(i + 2)]] for i in range(0, len(list) - (len(list) // 3), 3)]
+        if len(list) % 3 == 1:
+            array += [[list[len(list) - 1]]]
+        elif len(list) % 3 == 2:
+            array += [[list[len(list) - 1], list[len(list) - 2]]]
+
+    else:
+        array += [[list[i], list[i + 1], list[i + 2]] for i in range(0, len(list), 3)]
+
+    # print(array)
+    return array
+
+
 def getPrice(args):
     data = fetch_data('https://neo-api.b-cdn.net/flamingo/live-data/prices/latest')
-    pricedata = data
-    # print(pricedata)
     hashprice = {}
     for i in args:
-        for j in pricedata:
+        print(i)
+        for j in data:
             if i == j['hash']:
                 hashprice[i] = j['usd_price']
 
@@ -250,7 +308,7 @@ def getLatestCoinPrice(coin):
             price = i['usd_price']
             coinPrice = f'{coin} : ${round(price, 5)}'
 
-    print(coinPrice)
+    # print(coinPrice)
     return coinPrice
 
 
@@ -279,8 +337,3 @@ def getWalletCoinBalance(address):
 
 if __name__ == "__main__":
     pass
-    getFlamingoMarketCap()
-
-    # calculateWalletBalance('NYAN6Nfd5rNWqJhqz6KxXBDJSv1DtMHU9G')
-    # getWalletCoinBalance('NYAN6Nfd5rNWqJhqz6KxXBDJSv1DtMHU9G')
-    # getLatestCoinPrice('TIPS')
