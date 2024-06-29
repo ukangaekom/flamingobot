@@ -152,7 +152,10 @@ async def button_commands(update: Update, context: CallbackContext):
         print("analysis_report button has been pressed")
 
     if query.data == 'about_flamingo':
-        await query.edit_message_text(text="You clicked info about flamingo")
+        await query.edit_message_text(text="""
+            Welcome to Flamingo coach, your go-to Telegram bot for in-depth insights and updates on Flamingo Finance. Our mission is to provide you with comprehensive and real-time information about the project, ensuring you stay informed and engaged with Educational Resources, Community Engagement, Frequently Asked Questions, Detailed Project Information, Real-Time price Updates
+
+                                      """)
         print("about flamingo button has been pressed")
 
     if query.data == 'user_guide':
