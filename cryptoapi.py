@@ -306,7 +306,7 @@ def getLatestCoinPrice(coin):
         if i['unwrappedSymbol'] == coin:
             symbol = coin
             price = i['usd_price']
-            coinPrice = f'{coin} : ${round(price, 5)}'
+            coinPrice = f'{symbol} : ${round(price, 5)}'
 
     # print(coinPrice)
     return coinPrice

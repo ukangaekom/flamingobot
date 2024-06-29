@@ -152,24 +152,26 @@ async def button_commands(update: Update, context: CallbackContext):
         print("analysis_report button has been pressed")
 
     if query.data == 'about_flamingo':
-        await query.edit_message_text(text="""
-            *About Flamingo Bot*\n\n
-            Welcome to Flamingo coach, your go-to Telegram bot for in-depth insights and updates on Flamingo Finance. Our mission is to provide you with comprehensive and real-time information about the project, ensuring you stay informed and engaged with Educational Resources, Community Engagement, Frequently Asked Questions, Detailed Project Information, Real-Time price Updates
-
-                                      """, parse_mode='Markdown')
-        print("about flamingo button has been pressed")
+        await query.edit_message_text(text="""*About Flamingo Bot*\n\nWelcome to Flamingo coach, your go-to Telegram bot for in-depth insights and updates on Flamingo Finance. Our mission is to provide you with comprehensive and real-time information about the project, ensuring you stay informed and engaged with Educational Resources, Community Engagement, Frequently Asked Questions, Detailed Project Information, Real-Time price Updates""", parse_mode='Markdown')
+        # print("about flamingo button has been pressed")
 
     if query.data == 'user_guide':
         await query.edit_message_text(text="*🕵️‍♀️ Its time to be a Flamingo Wizard*",
                                       reply_markup=user_guide,
                                       parse_mode='Markdown')
-        print("flamingo user guide was pressed")
+        # print("flamingo user guide was pressed")
+    
+    if query.data in coin_list:
+        price = cryptoapi.getLatestCoinPrice(query.data)
+        await query.edit_message_text(text=f"*💎 {query.data} Lastest Price*\n\n*{price}*", parse_mode="Markdown")
 
     for i in cryptoapi.question_answer.keys():
         if query.data == i:
             await query.edit_message_text(text=f"*{i}* \n {cryptoapi.question_answer[i]} ",
                                           parse_mode="Markdown")
             break
+        
+    
 
 
 if __name__ == '__main__':
@@ -189,10 +191,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('options', useMenu))
     app.add_handler(CallbackQueryHandler(button_commands))
 
-    # print(dir(CallbackQueryHandler))
-    # Adding callback queries
-    # button = CallbackQueryHandler('marketcap',marketCap_command)
-    # app.add_handler(CallbackQueryHandler('marketcap',button_commands(Update,CallbackContext)))
+    
 
     #  message handlers
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
