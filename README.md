@@ -1,5 +1,7 @@
-# Flamingobot
+# Flamingobot🤖
 
+### Try Me Out 🦆👇 
+**https://t.me/flmneo_bot**
 
 ## Table of Content
 
