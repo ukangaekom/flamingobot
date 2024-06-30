@@ -305,7 +305,7 @@ def getLatestCoinPrice(coin):
     for i in data:
         if i['symbol'] == coin:
             symbol = coin
-            price = i['usd_price']
+            price = i['usd_price']  
             coinPrice = f'{coin} : ${round(price, 5)}'
 
     # print(coinPrice)

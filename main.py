@@ -36,7 +36,13 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        '🕵️: Hello, I am flamingo help bot. I have the following commands documentaions to improve your user experience over here!',
+        '''🕵️: Hello, I am flamingo help bot. I have the following commands documentaions to improve your user experience over here!\n *1. 💳Check Balance in your wallet*\n /walletdetails <wallet address>\n
+         e.g /walletdetails NYAN6Nfd5rNWqJhqz6KxXBDJSv1DtMHU9G \n\n
+        *2. 📈Check Prices of All Coins*\n /marketdetails\n\n
+        *3. 📊Check Flamingo Market Cap* \n /marketcap \n\n
+        *4. 💵Check Coin Prices*\n /coinprice <coin>\n
+         e.g /coinprice FLM\n\n
+         *5 🔭Explore More Interactive Actions*\n /options''',
         parse_mode='Markdown')
 
 
