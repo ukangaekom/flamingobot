@@ -3,6 +3,14 @@
 ### Try Me Out 🦆👇 
 **https://t.me/flmneo_bot**
 
+
+## Installation Guide
+
+1. Python --version ```python3.9```
+ ### Dependencies to install with PIP
+1. ```pip install python-telegram-bot typing telegram.ext```
+
+
 ## Table of Content
 
 1. **Welcome**
