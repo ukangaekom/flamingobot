@@ -204,7 +204,7 @@ def getMarketdata(list):
     market_data = ''
     for i in data:
         for coin in list:
-            if i['unwrappedSymbol'] == coin:
+            if i['symbol'] == coin:
                 symbol = coin
                 price = i['usd_price']
                 market_data += f'✅*{coin}*  :  💸*${round(price, 5)}* \n\n'
@@ -303,10 +303,10 @@ def getLatestCoinPrice(coin):
 
     coinPrice = ''
     for i in data:
-        if i['unwrappedSymbol'] == coin:
+        if i['symbol'] == coin:
             symbol = coin
             price = i['usd_price']
-            coinPrice = f'{symbol} : ${round(price, 5)}'
+            coinPrice = f'{coin} : ${round(price, 5)}'
 
     # print(coinPrice)
     return coinPrice
